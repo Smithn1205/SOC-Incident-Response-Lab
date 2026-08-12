@@ -1,0 +1,17 @@
+// Incident 01 — SSH Brute-Force Detection & Investigation
+// Replace this starter logic with the query that matches the actual table/schema
+// after the Ubuntu SSH logs are successfully ingested into Microsoft Sentinel.
+
+// Investigation goals:
+// 1. Identify repeated failed SSH authentication attempts.
+// 2. Aggregate attempts by source IP and targeted account.
+// 3. Measure activity in a short time window.
+// 4. Check whether a successful authentication followed the failures.
+
+// Starter pattern only — validate field names against your environment.
+Syslog
+| where SyslogMessage has "Failed password"
+| summarize FailedAttempts = count()
+    by Computer, bin(TimeGenerated, 5m)
+| where FailedAttempts >= 10
+| order by FailedAttempts desc
