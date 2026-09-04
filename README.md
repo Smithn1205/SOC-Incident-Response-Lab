@@ -1,6 +1,6 @@
 # SOC Incident Response Lab
 
-I built this repository to document hands-on SOC investigations using lab environments that I control. The goal is to practise the same workflow I would use as a SOC analyst: collect logs, identify suspicious activity, investigate what happened, build a timeline, map the activity to MITRE ATT&CK, and decide what action should be taken next.
+I built this repository to document hands-on SOC investigations using lab environments that I control. My goal is to practise the same workflow I would use as a SOC analyst: collect logs, identify suspicious activity, investigate what happened, build a timeline, map the activity to MITRE ATT&CK, and decide what action should be taken next.
 
 All activity in this repository is simulated. No production systems or third-party environments are used.
 
