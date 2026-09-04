@@ -1,32 +1,33 @@
 # SOC Incident Response Lab
 
-I built this repository to document hands-on SOC investigations using lab environments that I control. My goal is to practise the same workflow I would use as a SOC analyst: collect logs, identify suspicious activity, investigate what happened, build a timeline, map the activity to MITRE ATT&CK, and decide what action should be taken next.
+This repo is where I keep my hands-on SOC and incident response labs. I am using these labs to practise the kind of work I would do as a SOC analyst: collect logs, search for suspicious activity, investigate what happened, build a timeline, and document the result.
 
-All activity in this repository is simulated. No production systems or third-party environments are used.
+Everything here is done in lab environments that I own or control. None of the cases are production incidents.
 
 ## Investigations
 
-| # | Incident | Platform | Status |
+| # | Investigation | Platform | Status |
 |---|---|---|---|
-| 01 | SSH Brute-Force Detection and Investigation | Microsoft Sentinel / Linux | Complete |
+| 01 | SSH Brute Force Investigation | Microsoft Sentinel / Linux | Complete |
 | 02 | Suspicious PowerShell Activity | Microsoft Sentinel / Defender XDR | Planned |
 | 03 | Windows Authentication Anomaly | Microsoft Sentinel | Planned |
 | 04 | Web Attack / WAF Investigation | Cloudflare | Planned |
 
-## What I am practising
+## Skills I am practising
 
 - Microsoft Sentinel and KQL
 - Splunk and SPL
-- Log analysis and event correlation
-- Alert triage and investigation
-- Timeline reconstruction
+- Log analysis
+- Alert triage
+- Event correlation
+- Timeline building
 - MITRE ATT&CK mapping
 - Linux and Windows security monitoring
-- Detection logic and tuning
-- Containment and remediation thinking
-- Writing clear incident notes
+- Detection queries
+- Containment and remediation
+- Incident documentation
 
-## Repository Structure
+## Repo structure
 
 ```text
 SOC-Incident-Response-Lab/
@@ -37,8 +38,8 @@ SOC-Incident-Response-Lab/
     └── evidence/
 ```
 
-Each investigation is written as a small case file rather than a collection of screenshots. I include the environment, log source, detection logic, investigation steps, timeline, conclusion, and what I would improve next.
+I want each lab to read like a small SOC case rather than just a folder of screenshots. I include what I set up, what I detected, how I investigated it, what I concluded, and what I would do next in a real environment.
 
 ## Author
 
-Smith Nunes — M.Sc. Computer Science (Cybersecurity), Berlin, Germany
+Smith Nunes
