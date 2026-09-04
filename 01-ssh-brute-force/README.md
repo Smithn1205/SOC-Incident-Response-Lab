@@ -1,37 +1,39 @@
-# Incident 01: SSH Brute-Force Detection and Investigation
+# Incident 01: SSH Brute Force Investigation
 
 ## Overview
 
-For my first SOC investigation, I built an Ubuntu VM in Azure, sent its SSH authentication logs into Microsoft Sentinel, and generated a short burst of failed SSH attempts from a system I control.
+For this lab I created an Ubuntu VM in Azure and sent its SSH authentication logs to Microsoft Sentinel.
 
-The test produced **8 invalid-user authentication attempts in about 2.6 seconds** against `soc-linux-01`. My KQL query grouped the events by source, username, and host and triggered on the burst. I then checked whether any successful SSH login followed the failures.
+I then generated a short burst of failed SSH attempts from my own system. The test created **8 invalid-user attempts in about 2.6 seconds** against `soc-linux-01`.
 
-**Result:** the activity was detected, but there was no successful authentication after the failed attempts.
+I used KQL to find and group the failed attempts, then checked whether a successful SSH login happened after them.
 
-**Classification:** Simulated true positive — unsuccessful SSH brute-force-style activity.
+**Result:** 8 failed SSH attempts were detected and no successful authentication was found afterward.
 
-## Lab Setup
+This was a controlled lab test, not a real production incident.
 
-| Component | Configuration |
+## Lab setup
+
+| Component | Setup |
 |---|---|
 | SIEM | Microsoft Sentinel |
 | Log Analytics workspace | `law-sentinel-lab` |
 | Linux host | `soc-linux-01` |
-| Operating system | Ubuntu Server 24.04.4 LTS |
-| Authentication service | OpenSSH |
-| Log collection | Azure Monitor Agent (AMA) |
+| OS | Ubuntu Server 24.04.4 LTS |
+| SSH service | OpenSSH |
+| Log collection | Azure Monitor Agent |
 | Data Collection Rule | `dcr-soc-linux-syslog` |
-| Sentinel table | `Syslog` |
+| Table | `Syslog` |
 | Query language | KQL |
 
-SSH was restricted at the Azure Network Security Group to my own public IP. Password authentication stayed disabled and I used SSH keys for administration.
+SSH access to the VM was limited to my own public IP through an Azure Network Security Group. Password authentication was disabled and I used an SSH key to connect.
 
-## Log Flow
+## Log flow
 
 ```text
 Ubuntu SSH logs
       ↓
-Syslog (auth / authpriv)
+Syslog
       ↓
 Azure Monitor Agent
       ↓
@@ -42,17 +44,17 @@ Log Analytics
 Microsoft Sentinel
 ```
 
-Before generating the failed logins, I sent a simple test marker through `authpriv` and confirmed it appeared in the Sentinel `Syslog` table. This gave me a quick way to confirm that the whole logging path was working before starting the investigation.
+Before creating the failed logins, I sent a simple Syslog test message and confirmed that it reached the `Syslog` table. This helped me confirm that log collection was working first.
 
-## Detection Idea
+## Detection idea
 
-My detection idea was simple: if one source generates several invalid SSH authentication attempts against the same host in a short period, I want that activity to stand out for investigation.
+The idea was simple: if the same source makes several invalid SSH login attempts in a short time, I want to see it clearly in Sentinel.
 
-For this lab I used a threshold of **5 failed attempts**. I treated that as a lab threshold, not a production recommendation. In a real environment I would tune it against normal login behaviour and false positives.
+For this lab I used **5 failed attempts** as the threshold.
 
-## KQL Detection
+## KQL query
 
-The working query is saved in [`detection.kql`](./detection.kql).
+The query is saved in [`detection.kql`](./detection.kql).
 
 ```kusto
 Syslog
@@ -71,9 +73,9 @@ Syslog
 | order by FailedAttempts desc
 ```
 
-The query filters for SSH events, extracts the source IP and username from the raw Syslog message, counts the attempts, and records the first and last event time.
+The query filters SSH events, pulls out the source IP and username, counts the failed attempts, and shows the first and last event time.
 
-## What I Found
+## What I found
 
 | Field | Result |
 |---|---|
@@ -84,27 +86,29 @@ The query filters for SSH events, extracts the source IP and username from the r
 | Last event | `2026-09-04 18:17:53.959 UTC` |
 | Duration | About **2.6 seconds** |
 
-All eight failures came from the same test source and targeted the same invalid username.
+All 8 attempts came from the same test source and targeted the same invalid username.
 
 ## Investigation
 
-### 1. Confirm the raw events
+### 1. Check the raw SSH events
 
-I first searched the `Syslog` table for SSH events from `soc-linux-01`. The relevant records looked like this:
+I searched the `Syslog` table for SSH events from `soc-linux-01`.
+
+The failed events looked like this:
 
 ```text
 Invalid user wronguser from <source-ip> port <source-port>
 ```
 
-There were eight matching events in rapid succession.
+I found 8 matching events close together.
 
-### 2. Group the failures
+### 2. Group the failed attempts
 
-I used KQL to group the events by source IP, username, and host. This showed one source making eight attempts against `wronguser` on `soc-linux-01`.
+I grouped the events by source IP, username, and host. This showed one source making 8 attempts against `wronguser` on `soc-linux-01`.
 
 ### 3. Check for a successful login
 
-After confirming the failures, I searched for SSH messages beginning with `Accepted` after the burst started.
+After that, I searched for SSH events beginning with `Accepted` after the failed attempts started.
 
 The query returned no results, so I found no successful SSH authentication after the failed attempts.
 
@@ -112,47 +116,49 @@ The query returned no results, so I found no successful SSH authentication after
 
 | Time (UTC) | Event |
 |---|---|
-| 18:17:51.325 | First invalid-user SSH attempt |
+| 18:17:51.325 | First invalid-user attempt |
 | 18:17:51.718 | Second attempt |
 | 18:17:52.113 | Third attempt |
 | 18:17:52.517 | Fourth attempt |
-| 18:17:52.869 | Fifth attempt — detection threshold reached |
+| 18:17:52.869 | Fifth attempt |
 | 18:17:53.239 | Sixth attempt |
 | 18:17:53.611 | Seventh attempt |
-| 18:17:53.959 | Eighth and final attempt |
-| After the burst | No successful SSH authentication found |
+| 18:17:53.959 | Eighth attempt |
+| After the attempts | No successful SSH login found |
 
 ## MITRE ATT&CK
 
-**T1110 — Brute Force**
+**T1110 - Brute Force**
 
-I mapped the activity to the high-level Brute Force technique because the lab was designed around repeated SSH authentication attempts. I did not use the Password Guessing sub-technique because password authentication was disabled and the test did not involve guessing passwords.
+I mapped this lab to T1110 because it involved repeated authentication attempts against SSH.
 
-## What I Would Do in a Real SOC
+I did not use the Password Guessing sub-technique because password authentication was disabled and this test did not involve guessing passwords.
 
-If I saw the same pattern in a real environment, I would:
+## What I would check in a real SOC
 
-- check whether the source IP is known or expected,
-- confirm which accounts were targeted,
-- look for a successful login after the failures,
-- check whether the same source targeted other systems,
-- review the host for activity after the authentication attempts,
-- keep SSH key-based authentication enabled where possible,
-- restrict SSH access to trusted networks or source addresses,
-- consider rate limiting or automated blocking for repeated failures,
-- tune the alert threshold based on the environment's normal behaviour.
+If I saw the same activity in a real environment, I would:
+
+- check whether the source IP is known or expected
+- see which usernames were targeted
+- check for any successful login after the failures
+- see whether the same source tried other hosts
+- review the host for suspicious activity after the login attempts
+- keep key-based SSH authentication where possible
+- restrict SSH access to trusted sources
+- consider blocking or rate limiting repeated failures
+- adjust the detection threshold based on normal activity
 
 ## Conclusion
 
-This lab gave me a complete basic SOC workflow: I collected Linux authentication logs, found repeated SSH failures in Sentinel, wrote a KQL detection, built a short timeline, and checked whether the activity resulted in a successful login.
+This lab gave me a basic end-to-end SOC workflow using Linux logs and Microsoft Sentinel.
+
+I collected the SSH logs, found the failed attempts, wrote a KQL query, built a timeline, and checked whether the attempts led to a successful login.
 
 The final result was **8 failed SSH attempts from one source with no successful authentication afterward**.
 
-## What I Learned
+## What I learned
 
-A few things stood out during the lab:
-
-- I should verify the logging path before generating test activity. The Syslog marker made troubleshooting much easier.
-- Raw SSH logs can generate more than one message for a single connection, so I filtered specifically for `Invalid user` to avoid double-counting related `Connection closed` events.
-- Firewall rules need to be checked as a complete rule set. I found an older broad SSH allow rule during setup and removed it so only my own source IP could reach port 22.
-- Counting failures is only the first part of the investigation. Checking whether a successful login followed the failures is what helped determine the actual outcome.
+- It is useful to confirm log collection before starting the test.
+- One SSH connection can create more than one log message, so I filtered for `Invalid user` to avoid counting related `Connection closed` messages twice.
+- I need to check the full firewall rule set, not just one rule. During setup I found an older broad SSH rule and removed it.
+- Counting failed logins is only part of the investigation. Checking for a successful login afterward is important to understand the outcome.
