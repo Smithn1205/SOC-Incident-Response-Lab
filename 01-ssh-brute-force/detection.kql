@@ -1,17 +1,18 @@
 // Incident 01 — SSH Brute-Force Detection & Investigation
-// Replace this starter logic with the query that matches the actual table/schema
-// after the Ubuntu SSH logs are successfully ingested into Microsoft Sentinel.
+// Validated against Linux Syslog collected from soc-linux-01.
+// Lab threshold: 5 or more invalid-user SSH attempts in the query window.
 
-// Investigation goals:
-// 1. Identify repeated failed SSH authentication attempts.
-// 2. Aggregate attempts by source IP and targeted account.
-// 3. Measure activity in a short time window.
-// 4. Check whether a successful authentication followed the failures.
-
-// Starter pattern only — validate field names against your environment.
 Syslog
-| where SyslogMessage has "Failed password"
-| summarize FailedAttempts = count()
-    by Computer, bin(TimeGenerated, 5m)
-| where FailedAttempts >= 10
+| where TimeGenerated > ago(30m)
+| where Computer == "soc-linux-01"
+| where ProcessName == "sshd"
+| where SyslogMessage startswith "Invalid user"
+| extend SourceIP = extract(@"from ([0-9]+\.[0-9]+\.[0-9]+\.[0-9]+)", 1, SyslogMessage)
+| extend TargetUser = extract(@"Invalid user (\S+)", 1, SyslogMessage)
+| summarize
+    FailedAttempts = count(),
+    FirstSeen = min(TimeGenerated),
+    LastSeen = max(TimeGenerated)
+    by SourceIP, TargetUser, Computer
+| where FailedAttempts >= 5
 | order by FailedAttempts desc
