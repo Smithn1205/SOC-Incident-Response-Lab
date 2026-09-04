@@ -1,62 +1,43 @@
 # SOC Incident Response Lab
 
-Hands-on cybersecurity portfolio focused on SOC detection, SIEM investigation, threat hunting, and incident response.
+I built this repository to document hands-on SOC investigations using lab environments that I control. The goal is to practise the same workflow I would use as a SOC analyst: collect logs, identify suspicious activity, investigate what happened, build a timeline, map the activity to MITRE ATT&CK, and decide what action should be taken next.
 
-## Purpose
+All activity in this repository is simulated. No production systems or third-party environments are used.
 
-This repository documents simulated security incidents investigated in controlled lab environments. Each case is designed to demonstrate practical analyst skills such as log analysis, detection engineering, incident triage, timeline reconstruction, MITRE ATT&CK mapping, and remediation planning.
-
-> **Note:** All incidents are simulated in lab environments. No production incidents or third-party systems are represented here.
-
-## Planned Investigations
+## Investigations
 
 | # | Incident | Platform | Status |
 |---|---|---|---|
-| 01 | SSH Brute-Force Detection & Investigation | Microsoft Sentinel / Linux | In progress |
+| 01 | SSH Brute-Force Detection and Investigation | Microsoft Sentinel / Linux | Complete |
 | 02 | Suspicious PowerShell Activity | Microsoft Sentinel / Defender XDR | Planned |
 | 03 | Windows Authentication Anomaly | Microsoft Sentinel | Planned |
 | 04 | Web Attack / WAF Investigation | Cloudflare | Planned |
 
-## Skills Demonstrated
+## What I am practising
 
 - Microsoft Sentinel and KQL
 - Splunk and SPL
 - Log analysis and event correlation
-- Incident triage and investigation
+- Alert triage and investigation
+- Timeline reconstruction
 - MITRE ATT&CK mapping
 - Linux and Windows security monitoring
-- Network and cloud security
-- Detection logic and alert tuning
-- Incident documentation and remediation
+- Detection logic and tuning
+- Containment and remediation thinking
+- Writing clear incident notes
 
 ## Repository Structure
 
 ```text
 SOC-Incident-Response-Lab/
 ├── README.md
-├── 01-ssh-brute-force/
-│   ├── README.md
-│   ├── detection.kql
-│   └── evidence/
-├── 02-suspicious-powershell/
-├── 03-windows-authentication-anomaly/
-└── 04-cloudflare-waf-investigation/
+└── 01-ssh-brute-force/
+    ├── README.md
+    ├── detection.kql
+    └── evidence/
 ```
 
-## Investigation Methodology
-
-Each case will document:
-
-1. Incident summary
-2. Lab environment and log sources
-3. Detection hypothesis
-4. Detection query
-5. Alert evidence
-6. Investigation steps
-7. Event timeline
-8. MITRE ATT&CK mapping
-9. Containment and remediation recommendations
-10. Lessons learned and detection improvements
+Each investigation is written as a small case file rather than a collection of screenshots. I include the environment, log source, detection logic, investigation steps, timeline, conclusion, and what I would improve next.
 
 ## Author
 
