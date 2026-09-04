@@ -1,4 +1,4 @@
-# Incident 01: SSH Brute Force Investigation
+# Incident 01: SSH Brute Force Lab
 
 ## Overview
 
@@ -12,7 +12,7 @@ I used KQL to find and group the failed attempts, then checked whether a success
 
 This was a controlled lab test, not a real production incident.
 
-## Lab setup
+## Lab Setup
 
 | Component | Setup |
 |---|---|
@@ -28,7 +28,7 @@ This was a controlled lab test, not a real production incident.
 
 SSH access to the VM was limited to my own public IP through an Azure Network Security Group. Password authentication was disabled and I used an SSH key to connect.
 
-## Log flow
+## Log Flow
 
 ```text
 Ubuntu SSH logs
@@ -46,13 +46,13 @@ Microsoft Sentinel
 
 Before creating the failed logins, I sent a simple Syslog test message and confirmed that it reached the `Syslog` table. This helped me confirm that log collection was working first.
 
-## Detection idea
+## Detection
 
-The idea was simple: if the same source makes several invalid SSH login attempts in a short time, I want to see it clearly in Sentinel.
+If the same source makes several invalid SSH login attempts in a short time, I want to see it clearly in Sentinel.
 
 For this lab I used **5 failed attempts** as the threshold.
 
-## KQL query
+## KQL Query
 
 The query is saved in [`detection.kql`](./detection.kql).
 
@@ -75,7 +75,7 @@ Syslog
 
 The query filters SSH events, pulls out the source IP and username, counts the failed attempts, and shows the first and last event time.
 
-## What I found
+## Results
 
 | Field | Result |
 |---|---|
@@ -134,7 +134,7 @@ I mapped this lab to T1110 because it involved repeated authentication attempts 
 
 I did not use the Password Guessing sub-technique because password authentication was disabled and this test did not involve guessing passwords.
 
-## What I would check in a real SOC
+## Response
 
 If I saw the same activity in a real environment, I would:
 
@@ -150,15 +150,13 @@ If I saw the same activity in a real environment, I would:
 
 ## Conclusion
 
-This lab gave me a basic end-to-end SOC workflow using Linux logs and Microsoft Sentinel.
-
 I collected the SSH logs, found the failed attempts, wrote a KQL query, built a timeline, and checked whether the attempts led to a successful login.
 
 The final result was **8 failed SSH attempts from one source with no successful authentication afterward**.
 
-## What I learned
+## What I Learned
 
-- It is useful to confirm log collection before starting the test.
-- One SSH connection can create more than one log message, so I filtered for `Invalid user` to avoid counting related `Connection closed` messages twice.
-- I need to check the full firewall rule set, not just one rule. During setup I found an older broad SSH rule and removed it.
-- Counting failed logins is only part of the investigation. Checking for a successful login afterward is important to understand the outcome.
+- Confirm log collection before starting the test.
+- Filter the SSH messages carefully to avoid counting the same connection more than once.
+- Check the full firewall rule set, not just one rule.
+- Always check whether failed login attempts were followed by a successful login.
