@@ -1,6 +1,5 @@
-// Incident 01 — SSH Brute-Force Detection & Investigation
-// Validated against Linux Syslog collected from soc-linux-01.
-// Lab threshold: 5 or more invalid-user SSH attempts in the query window.
+// Detect repeated invalid SSH user attempts on the lab host.
+// I used 5 failures as the threshold for this test.
 
 Syslog
 | where TimeGenerated > ago(30m)
