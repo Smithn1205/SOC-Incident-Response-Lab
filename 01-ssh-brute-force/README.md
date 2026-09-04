@@ -2,7 +2,7 @@
 
 ## Status
 
-**Investigation complete — sanitized evidence upload pending.**
+**Investigation complete — sanitized evidence included.**
 
 > **Lab scope:** This incident was intentionally simulated in an Azure environment owned and controlled by the author. It does not represent a production security incident.
 
@@ -94,14 +94,19 @@ The query identified:
 
 ## 6. Alert Evidence
 
-The following evidence was captured during the investigation and will be added to the `evidence/` directory after sanitization:
+### Evidence 1 — Aggregated Detection Result
 
-- raw Sentinel SSH authentication events,
-- aggregated KQL detection result showing eight failures,
-- chronological timeline of the eight invalid-user events,
-- query result showing no successful SSH authentication after the failure burst.
+![Microsoft Sentinel KQL result showing eight failed SSH attempts](./evidence/01-detection-result.png)
 
-Public IP addresses and other unnecessary identifiers are redacted before publication.
+*The detection query grouped the SSH authentication failures by source, targeted username, and host. The result shows eight failures against `wronguser` on `soc-linux-01` within approximately 2.6 seconds. The controlled source IP is redacted before publication.*
+
+### Evidence 2 — Event Timeline
+
+![Microsoft Sentinel timeline showing eight invalid-user SSH events](./evidence/02-event-timeline.png)
+
+*The chronological Sentinel results show eight `Invalid user wronguser` events generated in rapid succession. The controlled source IP is redacted while timestamps, host, username, and source ports remain visible for analysis.*
+
+A separate follow-up query searched for SSH messages beginning with `Accepted` after the failure sequence. It returned no results, providing no evidence of successful authentication after the simulated burst.
 
 ## 7. Investigation Steps
 
