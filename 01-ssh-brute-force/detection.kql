@@ -1,6 +1,3 @@
-// SSH brute force detection for this lab
-// Threshold: 5 failed attempts
-
 Syslog
 | where TimeGenerated > ago(30m)
 | where Computer == "soc-linux-01"
