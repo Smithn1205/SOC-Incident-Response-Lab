@@ -47,7 +47,7 @@ A sequence of events on host `win-3450` suggested possible collection of sensiti
 - **Alerts closed:** 35
 - **Mean dwell time:** 17 minutes
 
-These figures are the results reported by the lab dashboard. The mean time to resolve is intentionally not included here.
+These figures are the results reported by the lab dashboard.
 
 ## Skills Demonstrated
 
