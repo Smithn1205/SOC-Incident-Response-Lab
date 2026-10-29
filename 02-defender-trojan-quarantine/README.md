@@ -88,6 +88,8 @@ These are recommended validation steps; the screenshots establish the recorded q
 | Action status | `Success` |
 | Execution status | `Suspended` |
 
+<!-- Portfolio review: Document Defender Trojan detection and quarantine findings. -->
+
 ## Conclusion
 
 The lab alert is classified as a **true positive** because Defender reported a Trojan and successfully quarantined the identified file. The appropriate disposition is to record the containment result, verify the process-to-file relationship, and check for related activity before treating the endpoint as fully clean. The case is based on simulated lab telemetry and should not be presented as a real production incident.
