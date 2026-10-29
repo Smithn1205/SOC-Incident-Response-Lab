@@ -1,44 +1,42 @@
 # SOC Incident Response Lab
 
-This repo is where I keep my hands-on SOC and incident response labs. I am using these labs to practise the kind of work I would do as a SOC analyst: collect logs, search for suspicious activity, investigate what happened, build a timeline, and document the result.
+This repository documents hands-on SOC investigations and incident-response exercises completed in controlled lab environments. Each case focuses on evidence-based alert triage, event correlation, classification, escalation decisions, and practical remediation.
 
-Everything here is done in lab environments that I own or control. None of the cases are production incidents.
+> **Lab disclaimer:** These are simulated exercises, not production incidents. Findings and response actions are described only to the extent supported by the available lab telemetry.
 
 ## Investigations
 
-| # | Investigation | Platform | Status |
+| # | Investigation | Platform | Outcome |
 |---|---|---|---|
-| 01 | SSH Brute Force Investigation | Microsoft Sentinel / Linux | Complete |
-| 02 | Suspicious PowerShell Activity | Microsoft Sentinel / Defender XDR | Planned |
-| 03 | Windows Authentication Anomaly | Microsoft Sentinel | Planned |
-| 04 | Web Attack / WAF Investigation | Cloudflare | Planned |
+| 01 | [SSH Brute Force Investigation](./01-ssh-brute-force/) | Microsoft Sentinel / Linux | 8 failed SSH attempts detected; no subsequent successful login found |
+| 02 | [Defender Trojan Detection and Quarantine](./02-defender-trojan-quarantine/) | Microsoft Defender / Windows event telemetry | Malware detection quarantined successfully; validate related process and endpoint events |
 
-## Skills I am practising
+## Skills Practised
 
-- Microsoft Sentinel and KQL
-- Splunk and SPL
-- Log analysis
-- Alert triage
-- Event correlation
-- Timeline building
-- MITRE ATT&CK mapping
-- Linux and Windows security monitoring
-- Detection queries
-- Containment and remediation
-- Incident documentation
+- Alert triage and true-positive / false-positive classification
+- SIEM investigation with KQL and Splunk SPL
+- Windows endpoint and Sysmon event analysis
+- Process lineage, command-line, file-path, and timestamp review
+- Correlation of related events and timeline construction
+- MITRE ATT&CK mapping where supported by evidence
+- Escalation decisions, containment, remediation, and case documentation
 
-## Repo structure
+## Investigation Approach
+
+For each case, I document the alert context, relevant evidence, investigation steps, assessment rationale, affected entities, escalation decision, and recommended response. I distinguish confirmed observations from hypotheses and identify missing telemetry rather than treating an alert description alone as proof.
+
+## Repository Structure
 
 ```text
 SOC-Incident-Response-Lab/
 ├── README.md
-└── 01-ssh-brute-force/
-    ├── README.md
-    ├── detection.kql
-    └── evidence/
+├── 01-ssh-brute-force/
+│   ├── README.md
+│   ├── detection.kql
+│   └── evidence/
+└── 02-defender-trojan-quarantine/
+    └── README.md
 ```
-
-I want each lab to read like a small SOC case rather than just a folder of screenshots. I include what I set up, what I detected, how I investigated it, what I concluded, and what I would do next in a real environment.
 
 ## Author
 
