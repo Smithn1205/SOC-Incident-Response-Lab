@@ -75,8 +75,6 @@ These are recommended follow-up steps; they should not be described as completed
 | Script | `install-atomicredteam.ps1` |
 | Repository reference | `github.com/redcanaryco/atomic-red-team` |
 
-<!-- Portfolio review: Add investigation of Atomic Red Team download and execution. -->
-
 ## Conclusion
 
-The alert is a **true positive for suspicious download-and-execution behavior**, and escalation is appropriate until authorization and the outcome are validated. The evidence supports the observed command sequence, but it does not independently prove malicious intent or successful compromise. This report describes a simulated lab investigation, not a production incident.
+The alert is a **true positive for the observed download-and-execution sequence**. Escalation remains appropriate until authorization and the outcome are validated. The evidence supports the observed command sequence, but it does not independently prove malicious intent or successful compromise. This report describes a simulated lab investigation, not a production incident.
