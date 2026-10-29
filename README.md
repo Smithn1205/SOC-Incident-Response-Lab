@@ -1,6 +1,6 @@
 # SOC Incident Response Lab
 
-This repository documents hands-on SOC investigations and incident-response exercises completed in controlled lab environments. Each case focuses on evidence-based alert triage, event correlation, classification, escalation decisions, and practical remediation.
+This repository documents hands-on SOC investigations and incident-response exercises completed in simulated lab environments. Each case focuses on evidence-based alert triage, event correlation, classification, escalation decisions, and practical remediation.
 
 > **Lab disclaimer:** These are simulated exercises, not production incidents. Findings and response actions are described only to the extent supported by the available lab telemetry.
 
@@ -41,8 +41,6 @@ SOC-Incident-Response-Lab/
 └── 03-atomic-red-team-download-execution/
     └── README.md
 ```
-
-<!-- Portfolio review: Update SOC portfolio with recent investigation cases. -->
 
 ## Author
 
