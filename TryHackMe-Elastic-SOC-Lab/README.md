@@ -1,7 +1,5 @@
 # TryHackMe SOC Investigation Lab — Elastic SIEM
 
-**[View TryHackMe public results summary →](https://tryhackme.com/soc-sim/public-summary/4f350a99b8ce4cf49de7b788d41df5e56d78d48d17d83be95ebef244c2cf5aec600a53452ed321199a5bfa0619a1237a)**
-
 ## Overview
 
 Hands-on SOC alert-triage exercise using Elastic Stack (ELK), Kibana, Sysmon process events, and email telemetry. The objective was to investigate alerts, distinguish malicious activity from benign activity, correlate related events, and document classification and response recommendations.
