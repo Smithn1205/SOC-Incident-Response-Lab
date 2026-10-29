@@ -42,6 +42,8 @@ SOC-Incident-Response-Lab/
     └── README.md
 ```
 
+<!-- Portfolio review: Update SOC portfolio with recent investigation cases. -->
+
 ## Author
 
 Smith Nunes
